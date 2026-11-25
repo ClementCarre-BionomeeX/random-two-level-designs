@@ -1,13 +1,14 @@
 """Figures and appendix table for the equal-budget design comparison (results/compare_designs.jsonl) and DSD vs smaller
 random fractions (results/compare_dsd_smaller.jsonl). Usage: python3 sims/fig_compare.py results figures
 Env COMPARE=compare_designs_sigma SUFFIX=_sigma: same figures and table from the sigma-known run (outputs get SUFFIX;
-the DSD-vs-smaller figure is only drawn for the default run, whose estimator it shares)."""
+the DSD-vs-smaller figure then reads compare_dsd_smaller_sigma.jsonl)."""
 import json, sys, os, matplotlib
 matplotlib.use('Agg'); import matplotlib.pyplot as plt
 RES, OUT = sys.argv[1], sys.argv[2]
 COMPARE = os.environ.get('COMPARE', 'compare_designs'); SUFFIX = os.environ.get('SUFFIX', '')
 L = [json.loads(l) for l in open(f'{RES}/{COMPARE}.jsonl')]
-SM = [json.loads(l) for l in open(f'{RES}/compare_dsd_smaller.jsonl')] if os.path.exists(f'{RES}/compare_dsd_smaller.jsonl') else []
+SMALLER = 'compare_dsd_smaller' + SUFFIX
+SM = [json.loads(l) for l in open(f'{RES}/{SMALLER}.jsonl')] if os.path.exists(f'{RES}/{SMALLER}.jsonl') else []
 C = {'struct': '#eb6834', 'random': '#2a78d6', 'half': '#1baf7a', 'quarter': '#8a8a85'}
 MK = {'struct': 's', 'random': 'o', 'half': '^', 'quarter': 'v'}
 TYPES = [('main', 'Main effects'), ('both', '2×1D'), ('one', '1×1D'), ('neither', '0×1D')]
@@ -50,7 +51,7 @@ with open(f'{OUT}/compare_table{SUFFIX}.tex', 'w') as f:
         cell = lambda who: ' & '.join('--' if r[who]['recall_top_s'].get(t) is None else f"{r[who]['recall_top_s'][t]:.2f}" for t, _ in TYPES)
         f.write(f"{r['p']} & {r['design']} & {SHOW[r['truth']]} & {r['sM']}+{r['sI']} & {r['theta']:g} & {r['M']} & "
                 f"{cell('struct')} & {r['struct']['fdp_mean']:.2f} & {cell('random')} & {r['random']['fdp_mean']:.2f}\\\\\n")
-if SM and not SUFFIX:   # DSD at full size vs random at 1, 1/2, 1/4 of its runs: recall over all types, by p, equal and heredity
+if SM:   # DSD at full size vs random at 1, 1/2, 1/4 of its runs: recall over all types, by p, equal and heredity
     fig2, axs = plt.subplots(2, 3, figsize=(7.2, 4.4), sharey=True)
     for i, truth in enumerate(['equal', 'heredity']):
         for j, p in enumerate(PS):
@@ -73,4 +74,4 @@ if SM and not SUFFIX:   # DSD at full size vs random at 1, 1/2, 1/4 of its runs:
             if j == 0: ax.set_ylabel('recall in top s, all types')
     h, l = axs[0, 0].get_legend_handles_labels()
     fig2.legend(h, l, loc='upper center', ncol=4, frameon=False, bbox_to_anchor=(.5, 1.0))
-    fig2.tight_layout(rect=(0, 0, 1, .93)); fig2.savefig(f'{OUT}/compare_dsd_smaller.pdf'); fig2.savefig(f'{OUT}/compare_dsd_smaller.png', dpi=110)
+    fig2.tight_layout(rect=(0, 0, 1, .93)); fig2.savefig(f'{OUT}/compare_dsd_smaller{SUFFIX}.pdf'); fig2.savefig(f'{OUT}/compare_dsd_smaller{SUFFIX}.png', dpi=110)
