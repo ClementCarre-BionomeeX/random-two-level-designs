@@ -1,9 +1,12 @@
 """Figures and appendix table for the equal-budget design comparison (results/compare_designs.jsonl) and DSD vs smaller
-random fractions (results/compare_dsd_smaller.jsonl). Usage: python3 sims/fig_compare.py results figures"""
+random fractions (results/compare_dsd_smaller.jsonl). Usage: python3 sims/fig_compare.py results figures
+Env COMPARE=compare_designs_sigma SUFFIX=_sigma: same figures and table from the sigma-known run (outputs get SUFFIX;
+the DSD-vs-smaller figure is only drawn for the default run, whose estimator it shares)."""
 import json, sys, os, matplotlib
 matplotlib.use('Agg'); import matplotlib.pyplot as plt
 RES, OUT = sys.argv[1], sys.argv[2]
-L = [json.loads(l) for l in open(f'{RES}/compare_designs.jsonl')]
+COMPARE = os.environ.get('COMPARE', 'compare_designs'); SUFFIX = os.environ.get('SUFFIX', '')
+L = [json.loads(l) for l in open(f'{RES}/{COMPARE}.jsonl')]
 SM = [json.loads(l) for l in open(f'{RES}/compare_dsd_smaller.jsonl')] if os.path.exists(f'{RES}/compare_dsd_smaller.jsonl') else []
 C = {'struct': '#eb6834', 'random': '#2a78d6', 'half': '#1baf7a', 'quarter': '#8a8a85'}
 MK = {'struct': 's', 'random': 'o', 'half': '^', 'quarter': 'v'}
@@ -39,15 +42,15 @@ def fig(truth, sM, th, fname):
     h, l = axs[0, 0].get_legend_handles_labels()
     fig.legend(h, l, loc='upper center', ncol=2, frameon=False, bbox_to_anchor=(.5, 1.0))
     fig.tight_layout(rect=(0, 0, 1, .95)); fig.savefig(f'{OUT}/{fname}.pdf'); fig.savefig(f'{OUT}/{fname}.png', dpi=110); plt.close(fig)
-fig('equal', 5, .5, 'compare_equal'); fig('heredity', 5, .5, 'compare_heredity')
+fig('equal', 5, .5, 'compare_equal' + SUFFIX); fig('heredity', 5, .5, 'compare_heredity' + SUFFIX)
 # appendix table: every cell, recall per type (structured | random) and mean false discovery proportion
-with open(f'{OUT}/compare_table.tex', 'w') as f:
+with open(f'{OUT}/compare_table{SUFFIX}.tex', 'w') as f:
     order = {'ssd': 0, 'res3': 1, 'res4': 2, 'dsd': 3}
     for r in sorted(L, key=lambda r: (r['p'], order[r['design']], r['truth'], r['sM'], r['theta'])):
         cell = lambda who: ' & '.join('--' if r[who]['recall_top_s'].get(t) is None else f"{r[who]['recall_top_s'][t]:.2f}" for t, _ in TYPES)
         f.write(f"{r['p']} & {r['design']} & {SHOW[r['truth']]} & {r['sM']}+{r['sI']} & {r['theta']:g} & {r['M']} & "
                 f"{cell('struct')} & {r['struct']['fdp_mean']:.2f} & {cell('random')} & {r['random']['fdp_mean']:.2f}\\\\\n")
-if SM:   # DSD at full size vs random at 1, 1/2, 1/4 of its runs: recall over all types, by p, equal and heredity
+if SM and not SUFFIX:   # DSD at full size vs random at 1, 1/2, 1/4 of its runs: recall over all types, by p, equal and heredity
     fig2, axs = plt.subplots(2, 3, figsize=(7.2, 4.4), sharey=True)
     for i, truth in enumerate(['equal', 'heredity']):
         for j, p in enumerate(PS):
