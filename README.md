@@ -96,3 +96,9 @@ Fit, figures and table: `python3 sims/fig_sweep2.py results/sweep_runs2.jsonl fi
 ```sh
 nohup sims/run_dsd_s64.sh 4 > logs/dsd_s64.out 2>&1 &
 ```
+
+## License
+
+Copyright (C) 2026 Clément Carré, BionomeeX SAS.
+
+This project is released under the GNU Lesser General Public License, version 3 (LGPL-3.0-only); see `COPYING.LESSER`, which supplements the GNU General Public License v3 in `COPYING`.
