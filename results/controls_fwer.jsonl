@@ -1,0 +1,10 @@
+{"theta": 0.5, "m": 75, "reps": 1000, "fwer": 0.06, "fwer_se": 0.0075, "per_test_alpha_0.05": 0.0494, "sd_null_z": 1.001}
+{"theta": 0.5, "m": 100, "reps": 1000, "fwer": 0.045, "fwer_se": 0.0066, "per_test_alpha_0.05": 0.0495, "sd_null_z": 1.0}
+{"theta": 0.5, "m": 150, "reps": 1000, "fwer": 0.058, "fwer_se": 0.0074, "per_test_alpha_0.05": 0.0498, "sd_null_z": 1.0}
+{"theta": 0.5, "m": 200, "reps": 1000, "fwer": 0.059, "fwer_se": 0.0075, "per_test_alpha_0.05": 0.0498, "sd_null_z": 1.0}
+{"theta": 0.5, "m": 300, "reps": 1000, "fwer": 0.056, "fwer_se": 0.0073, "per_test_alpha_0.05": 0.0499, "sd_null_z": 1.0}
+{"theta": 0.0, "m": 75, "reps": 1000, "fwer": 0.02, "fwer_se": 0.0044, "per_test_alpha_0.05": 0.0493, "sd_null_z": 1.0}
+{"theta": 0.0, "m": 100, "reps": 1000, "fwer": 0.028, "fwer_se": 0.0052, "per_test_alpha_0.05": 0.0496, "sd_null_z": 1.0}
+{"theta": 0.0, "m": 150, "reps": 1000, "fwer": 0.027, "fwer_se": 0.0051, "per_test_alpha_0.05": 0.0497, "sd_null_z": 1.0}
+{"theta": 0.0, "m": 200, "reps": 1000, "fwer": 0.04, "fwer_se": 0.0062, "per_test_alpha_0.05": 0.0497, "sd_null_z": 1.0}
+{"theta": 0.0, "m": 300, "reps": 1000, "fwer": 0.038, "fwer_se": 0.006, "per_test_alpha_0.05": 0.05, "sd_null_z": 1.0}

@@ -1,0 +1,4 @@
+.venv/
+logs/
+results/.lock
+__pycache__/
